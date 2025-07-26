@@ -1,25 +1,45 @@
-import Todo, { find, findByIdAndDelete, findById } from '../models/Todo';
+import Todo from '../models/Todo.js';
 
-export async function createTodo(req, res) {
-    const { title, description } = req.body;
-    const todo = new Todo({ title, description, userId: req.user.id });
-    await todo.save();
-    res.status(201).json(todo);
-}
-
-export async function getTodos(req, res) {
-    const todos = await find({ userId: req.user.id });
+export const getTodos = async (req, res) => {
+  try {
+    const todos = await Todo.find({ user: req.user.id });
     res.json(todos);
-}
+  } catch (err) {
+    res.status(500).json({ error: 'Server error' });
+  }
+};
 
-export async function deleteTodo(req, res) {
-    await findByIdAndDelete(req.params.id);
-    res.json({ message: 'Todo deleted ' });
-}
+export const createTodo = async (req, res) => {
+  try {
+    const todo = new Todo({
+      title: req.body.title,
+      user: req.user.id
+    });
+    const saved = await todo.save();
+    res.json(saved);
+  } catch (err) {
+    res.status(400).json({ error: 'Invalid data' });
+  }
+};
 
-export async function markAsRead(req, res) {
-    const todo = await findById(req.params.id);
-    todo.isRead = true;
-    await todo.save();
+export const updateTodo = async (req, res) => {
+  try {
+    const todo = await Todo.findOneAndUpdate(
+      { _id: req.params.id, user: req.user.id },
+      req.body,
+      { new: true }
+    );
     res.json(todo);
-}
+  } catch (err) {
+    res.status(400).json({ error: 'Update failed' });
+  }
+};
+
+export const deleteTodo = async (req, res) => {
+  try {
+    await Todo.findOneAndDelete({ _id: req.params.id, user: req.user.id });
+    res.json({ message: 'Deleted successfully' });
+  } catch (err) {
+    res.status(400).json({ error: 'Delete failed' });
+  }
+};

@@ -1,12 +1,12 @@
-const router = require('express').Router();
-import { createTodo, getTodos, updateTodo, deleteTodo, markAsRead } from '../controllers/todoControllers';
-import auth from '../middleware/auth';
+import express from 'express';
+import { getTodos, createTodo, updateTodo, deleteTodo } from '../controllers/todoController.js';
+import { verifyToken } from '../middleware/auth.js';
 
-router.use(auth); //protects all routes
-router.get('/', getTodos);
-router.post('/', createTodo);
-router.put('/:id', updateTodo);
-router.patch('/:id/read', markAsRead);
-router.delete('/:id', deleteTodo);
+const router = express.Router();
 
-export default router
+router.get('/', verifyToken, getTodos);
+router.post('/', verifyToken, createTodo);
+router.put('/:id', verifyToken, updateTodo);
+router.delete('/:id', verifyToken, deleteTodo);
+
+export default router;
