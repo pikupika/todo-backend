@@ -14,6 +14,10 @@ app.use(express.json());
 
 app.use('/api/todos', todoRoutes);
 
+app.get('/', (req, res) => {
+  res.send('Todo Backend is Live ✅');
+});
+
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('MongoDB connected');
@@ -21,4 +25,4 @@ mongoose.connect(process.env.MONGO_URI)
       console.log(`Server running on port ${process.env.PORT}`);
     });
   })
-  .catch(err => console.error(err));
+  .catch(err => console.error('MongoDB connection error:', err));
