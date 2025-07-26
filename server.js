@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 
 import todoRoutes from './routes/todoRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 dotenv.config();
 
@@ -12,7 +13,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use('/api/users', userRoutes);
 app.use('/api/todos', todoRoutes);
+
 
 app.get('/', (req, res) => {
   res.send('Todo Backend is Live ✅');
