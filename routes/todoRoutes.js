@@ -6,14 +6,14 @@ import {
   deleteTodo,
   markTodoAsRead
 } from '../controllers/todoController.js';
-import { verifyToken } from '../middleware/auth.js';
+import { auth } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-router.get('/', verifyToken, getTodos);
-router.post('/', verifyToken, createTodo);
-router.put('/:id', verifyToken, updateTodo);
-router.delete('/:id', verifyToken, deleteTodo);
-router.patch('/:id/read', verifyToken, markTodoAsRead);
+router.get('/', auth, getTodos);
+router.post('/', auth, createTodo);
+router.put('/:id', auth, updateTodo);
+router.delete('/:id', auth, deleteTodo);
+router.patch('/:id/read', auth, markTodoAsRead);
 
 export default router;
