@@ -6,7 +6,7 @@ import {
   deleteTodo,
   markTodoAsRead
 } from '../controllers/todoController.js';
-import authMiddleware from './middleware/authMiddleware.js';
+import authMiddleware from '../middleware/authMiddleware.js';
 
 app.get('/protected', authMiddleware, (req, res) => {
   res.json({ message: "You accessed protected route" });
