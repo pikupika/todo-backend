@@ -8,12 +8,11 @@ import {
 } from '../controllers/todoController.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 
+const router = express.Router();
+
 app.get('/protected', authMiddleware, (req, res) => {
   res.json({ message: "You accessed protected route" });
 });
-
-
-const router = express.Router();
 
 router.get('/', auth, getTodos);
 router.post('/', auth, createTodo);
