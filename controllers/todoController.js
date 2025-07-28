@@ -24,11 +24,12 @@ export const deleteTodo = async (req, res) => {
   res.json({ message: 'Deleted' });
 };
 
-export const markAsRead = async (req, res) => {
-  const updated = await Todo.findOneAndUpdate(
-    { _id: req.params.id, user: req.userId },
-    { read: true },
-    { new: true }
-  );
-  res.json(updated);
+export const markTodoAsRead = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const todo = await Todo.findByIdAndUpdate(id, { read: true }, { new: true });
+    res.status(200).json(todo);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
