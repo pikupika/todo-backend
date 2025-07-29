@@ -1,9 +1,18 @@
-import mongoose, { mongo } from "mongoose";
-import bcrypt from 'bcrypt';
+import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema({
-  username: { type: String, unique: true },
-  password: String
+    email: {
+        type: String,
+        required: true,
+        unique: true,   // to ensure no duplicate emails (including 'null' or '')
+        trim: true,     // to remove leading/trailing whitespace
+        lowercase: true // to converts email to lowercase for consistent storage/comparison
+    },
+    password: {
+        type: String,
+        required: true
+    },
 });
 
 userSchema.pre('save', async function () {
