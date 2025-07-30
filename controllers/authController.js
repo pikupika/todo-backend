@@ -32,28 +32,33 @@ export const login = async (req, res) => {
     console.log('Login attempt:', { email, password });
 
     const user = await User.findOne({ email });
-    if (!user) {
-      console.log('User not found for email:', email);
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
+    if (!user) return res.status(400).json({ message: 'User not found' });
 
     console.log('User found. Stored hashed password:', user.password);
 
-    const valid = await bcrypt.compare(password, user.password);
-    console.log('Password comparison result:', valid);
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    console.log('Password comparison result:', isPasswordValid);
 
-    if (!valid) {
+    if (!isPasswordValid) {
       console.log('Invalid password for user:', email);
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    console.log('Login successful for:', email);
-    res.json({ token });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: '1d',
+    });
 
-
-  } catch (err) {
-    console.error('Login error:', err);
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.status(200).json({
+      message: 'Login successful',
+      token,
+      user: {
+        id: user._id,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
+
