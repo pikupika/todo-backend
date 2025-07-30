@@ -20,7 +20,6 @@ export const register = async (req, res) => {
     const user = await User.create({ email, password: hashedPassword });
 
     res.status(201).json({ message: 'User created' });
-    console.log("🟢 register controller hit");
   } catch (err) {
     console.error("Register error:", err);
     res.status(500).json({ message: 'Internal Server Error' });
@@ -52,7 +51,6 @@ export const login = async (req, res) => {
     console.log('Login successful for:', email);
     res.json({ token });
 
-    console.log("🔴 login controller hit");
 
   } catch (err) {
     console.error('Login error:', err);
